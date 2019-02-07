@@ -20,6 +20,6 @@
     "@types/restify": "^7.2.7",
     "botbuilder": "^4.2.1",
     "restify": "^7.7.0",
-    "wolf-core": "^3.0.0-alpha.1"
+    "wolf-core": "^3.0.0-alpha.2"
   }
 }
