@@ -36,6 +36,12 @@ const wolfStorageLayer = createWolfStorageLayer(conversationState)
 // Listen for incoming requests
 server.post('/api/messages', (req, res) => {
   adapter.processActivity(req, res, async (context) => {
+    
+    // Has to be a message, ignores all other activity (such as conversation update events)
+    if (context.activity.type !== 'message') {
+      return
+    }
+
     // Bot logic here
     const wolfResult = await wolf.run(
       wolfStorageLayer(context),
