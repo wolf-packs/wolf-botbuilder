@@ -12,6 +12,13 @@ export interface UserState {
 
 export const abilities = [
   {
+    name: 'greeting',
+    slots: [],
+    onComplete: () => {
+      return 'Hello! Welcome to alarm bot.'
+    }
+  },
+  {
     name: 'addAlarm',
     slots: [
       {
