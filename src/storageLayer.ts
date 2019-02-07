@@ -21,13 +21,13 @@ export const createBotbuilderStorageLayer = <T extends AnyObject>(
   const convoStore = conversationState.createProperty(statePropertyName)
   return (botbuilderTurnContext: TurnContext, initialState?: T) => {
     const convoStateStorage: wolf.StorageLayer<T> = {
-      read: async () => {
-        return await convoStore.get(botbuilderTurnContext, initialState)
+      read: () => {
+        return convoStore.get(botbuilderTurnContext, initialState)
       },
       save: async (newState: T) => {
         // TODO: Why we chose to do this?
         // remove old keys
-        const oldState = conversationState.get(botbuilderTurnContext)
+        const oldState = await convoStore.get(botbuilderTurnContext, initialState)
         const oldKeys = Object.keys(oldState)
         oldKeys.forEach((key) => {
           delete oldState[key]
@@ -40,9 +40,35 @@ export const createBotbuilderStorageLayer = <T extends AnyObject>(
         })
 
         // save back to botbuilder context
-        await conversationState.saveChanges(botbuilderTurnContext)
+        conversationState.saveChanges(botbuilderTurnContext)
       }
     }
     return convoStateStorage
+  }
+}
+
+// TODO: JSDocs
+export const createWolfStorageLayer = (conversationState: ConversationState) => {
+  const wolfStorageLayer = createBotbuilderStorageLayer<wolf.WolfState>(conversationState, 'WOLF_STATE')
+  return (botbuilderTurnContext: TurnContext) => wolfStorageLayer(botbuilderTurnContext, getDefaultWolfState())
+}
+
+const getDefaultWolfState = () => {
+  return {
+    messageData: {
+      rawText: '',
+      intent: null,
+      entities: []
+    },
+    slotStatus: [],
+    slotData: [],
+    abilityStatus: [],
+    promptedSlotStack: [],
+    focusedAbility: null,
+    outputMessageQueue: [],
+    filledSlotsOnCurrentTurn: [],
+    abilitiesCompleteOnCurrentTurn: [],
+    defaultAbility: null,
+    runOnFillStack: []
   }
 }

@@ -1,1 +1,1 @@
-export { createBotbuilderStorageLayer } from './storageLayer'
+export { createBotbuilderStorageLayer, createWolfStorageLayer } from './storageLayer'
