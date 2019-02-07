@@ -3,7 +3,7 @@ import * as wolf from 'wolf-core'
 
 // Import Wolf's botbuilder storage layer
 // import { createBotbuilderStorageLayer } from 'wolf-botbuilder'
-import { createBotbuilderStorageLayer } from '../src'
+import { createBotbuilderStorageLayer, createWolfStorageLayer } from '../src'
 
 // Import Wolf abilities
 import { UserState, abilities } from './abilities'
@@ -31,7 +31,7 @@ const adapter = new BotFrameworkAdapter({
 const memoryStorage = new MemoryStorage();
 const conversationState = new ConversationState(memoryStorage)
 const conversationStorageLayer = createBotbuilderStorageLayer<UserState>(conversationState)
-const wolfStorageLayer = createBotbuilderStorageLayer<wolf.WolfState>(conversationState, 'WOLF_STATE')
+const wolfStorageLayer = createWolfStorageLayer(conversationState)
 
 // Listen for incoming requests
 server.post('/api/messages', (req, res) => {
@@ -42,10 +42,11 @@ server.post('/api/messages', (req, res) => {
       conversationStorageLayer(context, { alarms: [] }),
       () => nlp(context.activity.text),
       () => abilities,
-      'greet'
+      'greeting'
     )
 
-    // Respond first message from Wolf
-    await context.sendActivity(wolfResult.messageStringArray[0])
+    // Respond Wolf messages
+    const sendActivities = wolfResult.messageStringArray.map((message) => context.sendActivity(message))
+    await Promise.all(sendActivities)
   });
 });
