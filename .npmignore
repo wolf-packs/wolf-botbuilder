@@ -1,0 +1,8 @@
+build
+.env
+.vscode
+.vs
+*.bot
+examples
+static
+.github
