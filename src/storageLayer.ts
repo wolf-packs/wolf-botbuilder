@@ -50,25 +50,5 @@ export const createBotbuilderStorageLayer = <T extends AnyObject>(
 // TODO: JSDocs
 export const createWolfStorageLayer = (conversationState: ConversationState) => {
   const wolfStorageLayer = createBotbuilderStorageLayer<wolf.WolfState>(conversationState, 'WOLF_STATE')
-  return (botbuilderTurnContext: TurnContext) => wolfStorageLayer(botbuilderTurnContext, getDefaultWolfState())
-}
-
-const getDefaultWolfState = () => {
-  return {
-    messageData: {
-      rawText: '',
-      intent: null,
-      entities: []
-    },
-    slotStatus: [],
-    slotData: [],
-    abilityStatus: [],
-    promptedSlotStack: [],
-    focusedAbility: null,
-    outputMessageQueue: [],
-    filledSlotsOnCurrentTurn: [],
-    abilitiesCompleteOnCurrentTurn: [],
-    defaultAbility: null,
-    runOnFillStack: []
-  }
+  return (botbuilderTurnContext: TurnContext) => wolfStorageLayer(botbuilderTurnContext, wolf.getDefaultWolfState())
 }
