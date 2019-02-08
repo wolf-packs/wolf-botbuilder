@@ -6,6 +6,8 @@
   "scripts": {
     "build": "tsc",
     "build:dev": "tsc --p tsconfig.example.json",
+    "clean-dist": "rm -rf dist",
+    "release:alpha": "npm run clean-dist && npm run build && npm publish --tag alpha",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -22,6 +24,12 @@
     "@types/restify": "^7.2.7",
     "botbuilder": "^4.2.1",
     "restify": "^7.7.0",
-    "wolf-core": "^3.0.0-alpha.3"
+    "wolf-core": "^3.0.0-alpha.7"
+  },
+  "devDependencies": {
+    "@types/dotenv": "^6.1.0",
+    "@types/node-fetch": "^2.1.4",
+    "dotenv": "^6.2.0",
+    "node-fetch": "^2.3.0"
   }
 }

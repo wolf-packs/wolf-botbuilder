@@ -1,9 +1,9 @@
 // Import Wolf dependency
 import * as wolf from 'wolf-core'
 
-// Import Wolf's botbuilder storage layer
+// Import Wolf's Bot Builder storage layer
 // import { createBotbuilderStorageLayer } from 'wolf-botbuilder'
-import { createBotbuilderStorageLayer, createWolfStorageLayer } from '../src'
+import { createBotbuilderStorageLayer, createWolfStorageLayer } from '../../src'
 
 // Import Wolf abilities
 import { UserState, abilities } from './abilities'
@@ -11,7 +11,7 @@ import { UserState, abilities } from './abilities'
 // Import NLP
 import nlp from './nlp'
 
-// Bring in Botbuilder dependency
+// Bring in Bot Builder dependency
 import * as restify from 'restify'
 import { BotFrameworkAdapter, MemoryStorage, ConversationState } from 'botbuilder'
 
@@ -21,7 +21,7 @@ server.listen(process.env.port || process.env.PORT || 3978, () => {
   console.log(`\n${server.name} listening to ${server.url}`);
 });
 
-// Create adapter (Botbuilder specific)
+// Create adapter (Bot Builder specific)
 const adapter = new BotFrameworkAdapter({
   appId: process.env.microsoftAppID,
   appPassword: process.env.microsoftAppPassword,

@@ -1,0 +1,337 @@
+{
+  "luis_schema_version": "3.2.0",
+  "versionId": "0.1",
+  "name": "alarm",
+  "desc": "Alarm bot",
+  "culture": "en-us",
+  "tokenizerVersion": "1.0.0",
+  "intents": [
+    {
+      "name": "addAlarm"
+    },
+    {
+      "name": "greeting"
+    },
+    {
+      "name": "listAbility"
+    },
+    {
+      "name": "listAlarms"
+    },
+    {
+      "name": "None"
+    },
+    {
+      "name": "removeAlarm"
+    }
+  ],
+  "entities": [
+    {
+      "name": "name",
+      "roles": []
+    },
+    {
+      "name": "time",
+      "roles": []
+    }
+  ],
+  "composites": [],
+  "closedLists": [],
+  "patternAnyEntities": [],
+  "regex_entities": [],
+  "prebuiltEntities": [],
+  "model_features": [],
+  "regex_features": [],
+  "patterns": [],
+  "utterances": [
+    {
+      "text": "adasfasdfasdf",
+      "intent": "None",
+      "entities": []
+    },
+    {
+      "text": "add alarm",
+      "intent": "addAlarm",
+      "entities": []
+    },
+    {
+      "text": "add alarm at 3pm",
+      "intent": "addAlarm",
+      "entities": [
+        {
+          "entity": "time",
+          "startPos": 13,
+          "endPos": 15
+        }
+      ]
+    },
+    {
+      "text": "add alarm called asdf",
+      "intent": "addAlarm",
+      "entities": [
+        {
+          "entity": "name",
+          "startPos": 17,
+          "endPos": 20
+        }
+      ]
+    },
+    {
+      "text": "add alarm called hao",
+      "intent": "addAlarm",
+      "entities": [
+        {
+          "entity": "name",
+          "startPos": 17,
+          "endPos": 19
+        }
+      ]
+    },
+    {
+      "text": "add alarm called sleep at 10pm",
+      "intent": "addAlarm",
+      "entities": [
+        {
+          "entity": "name",
+          "startPos": 17,
+          "endPos": 21
+        },
+        {
+          "entity": "time",
+          "startPos": 26,
+          "endPos": 29
+        }
+      ]
+    },
+    {
+      "text": "add an alarm",
+      "intent": "addAlarm",
+      "entities": []
+    },
+    {
+      "text": "add an alarm called hao at 4pm",
+      "intent": "addAlarm",
+      "entities": [
+        {
+          "entity": "name",
+          "startPos": 20,
+          "endPos": 22
+        },
+        {
+          "entity": "time",
+          "startPos": 27,
+          "endPos": 29
+        }
+      ]
+    },
+    {
+      "text": "alarm called kevin at 2am",
+      "intent": "addAlarm",
+      "entities": [
+        {
+          "entity": "name",
+          "startPos": 13,
+          "endPos": 17
+        },
+        {
+          "entity": "time",
+          "startPos": 22,
+          "endPos": 24
+        }
+      ]
+    },
+    {
+      "text": "all alarms",
+      "intent": "listAlarms",
+      "entities": []
+    },
+    {
+      "text": "all my alarms",
+      "intent": "listAlarms",
+      "entities": []
+    },
+    {
+      "text": "delete alarm",
+      "intent": "removeAlarm",
+      "entities": []
+    },
+    {
+      "text": "delete my hao alarm",
+      "intent": "removeAlarm",
+      "entities": [
+        {
+          "entity": "name",
+          "startPos": 10,
+          "endPos": 12
+        }
+      ]
+    },
+    {
+      "text": "delete wakeup alarm",
+      "intent": "removeAlarm",
+      "entities": [
+        {
+          "entity": "name",
+          "startPos": 7,
+          "endPos": 12
+        }
+      ]
+    },
+    {
+      "text": "hao alarm at 9am",
+      "intent": "addAlarm",
+      "entities": [
+        {
+          "entity": "name",
+          "startPos": 0,
+          "endPos": 2
+        },
+        {
+          "entity": "time",
+          "startPos": 13,
+          "endPos": 15
+        }
+      ]
+    },
+    {
+      "text": "hey",
+      "intent": "greeting",
+      "entities": []
+    },
+    {
+      "text": "hi",
+      "intent": "greeting",
+      "entities": []
+    },
+    {
+      "text": "i want to add an alarm",
+      "intent": "addAlarm",
+      "entities": []
+    },
+    {
+      "text": "list alarms",
+      "intent": "listAlarms",
+      "entities": []
+    },
+    {
+      "text": "list all my alarms",
+      "intent": "listAlarms",
+      "entities": []
+    },
+    {
+      "text": "remove alarm",
+      "intent": "removeAlarm",
+      "entities": []
+    },
+    {
+      "text": "remove an alarm",
+      "intent": "removeAlarm",
+      "entities": []
+    },
+    {
+      "text": "remove hao alarm",
+      "intent": "removeAlarm",
+      "entities": [
+        {
+          "entity": "name",
+          "startPos": 7,
+          "endPos": 9
+        }
+      ]
+    },
+    {
+      "text": "remove wakeup",
+      "intent": "removeAlarm",
+      "entities": [
+        {
+          "entity": "name",
+          "startPos": 7,
+          "endPos": 12
+        }
+      ]
+    },
+    {
+      "text": "set an alarm called wakeup at 8am",
+      "intent": "addAlarm",
+      "entities": [
+        {
+          "entity": "name",
+          "startPos": 20,
+          "endPos": 25
+        },
+        {
+          "entity": "time",
+          "startPos": 30,
+          "endPos": 32
+        }
+      ]
+    },
+    {
+      "text": "show all alarms",
+      "intent": "listAlarms",
+      "entities": []
+    },
+    {
+      "text": "show me all my alarms",
+      "intent": "listAlarms",
+      "entities": []
+    },
+    {
+      "text": "show me what you can do",
+      "intent": "listAbility",
+      "entities": []
+    },
+    {
+      "text": "standup alarm at 10am",
+      "intent": "addAlarm",
+      "entities": [
+        {
+          "entity": "name",
+          "startPos": 0,
+          "endPos": 6
+        },
+        {
+          "entity": "time",
+          "startPos": 17,
+          "endPos": 20
+        }
+      ]
+    },
+    {
+      "text": "what are my alarms",
+      "intent": "listAlarms",
+      "entities": []
+    },
+    {
+      "text": "what are your abilities",
+      "intent": "listAbility",
+      "entities": []
+    },
+    {
+      "text": "what can you do",
+      "intent": "listAbility",
+      "entities": []
+    },
+    {
+      "text": "what is this",
+      "intent": "listAbility",
+      "entities": []
+    },
+    {
+      "text": "what up",
+      "intent": "greeting",
+      "entities": []
+    },
+    {
+      "text": "what's up",
+      "intent": "greeting",
+      "entities": []
+    },
+    {
+      "text": "yo",
+      "intent": "greeting",
+      "entities": []
+    }
+  ],
+  "settings": []
+}
