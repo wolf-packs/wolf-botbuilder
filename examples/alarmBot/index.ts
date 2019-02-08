@@ -2,7 +2,7 @@
 import * as wolf from 'wolf-core'
 
 // Import Wolf's Bot Builder storage layer
-// import { createBotbuilderStorageLayer } from 'wolf-botbuilder'
+// import { createBotbuilderStorageLayer, createWolfStorageLayer } from 'wolf-botbuilder'
 import { createBotbuilderStorageLayer, createWolfStorageLayer } from '../../src'
 
 // Import Wolf abilities

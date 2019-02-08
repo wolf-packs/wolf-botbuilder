@@ -4,7 +4,6 @@
 import { TurnContext } from 'botbuilder'
 import * as wolf from 'wolf-core'
 import fetch from 'node-fetch'
-import {} from '../../src'
 import abilities from './abilities'
 import { transformLuisToNlpResult } from './helpers/luis';
 

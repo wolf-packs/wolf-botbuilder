@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv'
 dotenv.config({path: './examples/luisAlarmBot/.env'})
 // Import Wolf's Bot Builder storage layer
-// import { createBotbuilderStorageLayer } from 'wolf-botbuilder'
+// import { createBotbuilderStorageLayer, createWolfStorageLayer } from 'wolf-botbuilder'
 import { createBotbuilderStorageLayer, createWolfStorageLayer } from '../../src'
 
 // Bring in Bot Builder dependency

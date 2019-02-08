@@ -5,7 +5,7 @@ The goal is to allow developers to create dynamic bot conversations flow utilizi
 
 If you have not already, we encourage you to check out [Wolf] to learn more about what this conversational framework aims to accomplish and the developer experience we are striving to enable.
 
-_Fun fact: Wolf can easily integrate with many popular frameworks, to find out more check out the [Wolf] documentation or [Wolf-Packs]._
+_Fun fact: Wolf can easily integrate with many popular frameworks, to find out more check out the [Wolf] docs or [Wolf-Packs]._
 
 ## What is provided?
 This package allows you, the bot developer, to utilize Bot Builder's internal storage layer to persist the `conversationState` and the `wolfState` while conforming to the storage interface that Wolf provides. There are two convenience functions provided that allows the developer to use the Bot Builder's `turnContext` as a mechanism to persist state. Both the `conversationState` and the `wolfState` are required to be persisted and supplied since Wolf is a stateless function that is run on every turn.
@@ -190,5 +190,5 @@ export class MyBot {
 [Wolf-Packs]: https://github.com/wolf-packs
 [Microsoft Bot Framework]: https://dev.botframework.com/
 [Microsoft Bot Builder SDK v4]: https://github.com/microsoft/botbuilder-js
-[Bot Builder Docs]: (https://docs.microsoft.com/en-us/azure/bot-service/javascript/bot-builder-javascript-quickstart?view=azure-bot-service-4.0)
+[Bot Builder Docs]: https://docs.microsoft.com/en-us/azure/bot-service/javascript/bot-builder-javascript-quickstart?view=azure-bot-service-4.0
 [NodeJS website]: https://nodejs.org
