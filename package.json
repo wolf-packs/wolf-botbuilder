@@ -1,8 +1,8 @@
 {
   "name": "wolf-botbuilder",
-  "version": "1.0.0-alpha.4",
+  "version": "1.0.0-alpha.5",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "build:dev": "tsc --p tsconfig.example.json",

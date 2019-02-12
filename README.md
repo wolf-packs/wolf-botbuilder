@@ -1,6 +1,6 @@
 # Wolf Bot Builder Integration
 
-This package is designed to enable seemless integration between [Wolf] and [Microsoft Bot Builder SDK v4].
+This package is designed to enable seamless integration between [Wolf] and [Microsoft Bot Builder SDK v4].
 The goal is to allow developers to create dynamic bot conversations flow utilizing the [Microsoft Bot Framework] in a declarative way. In order to utilize the Bot Framework to persist state with `TurnContext`, we provide a few convenience functions.
 
 If you have not already, we encourage you to check out [Wolf] to learn more about what this conversational framework aims to accomplish and the developer experience we are striving to enable.
@@ -16,7 +16,7 @@ This package allows you, the bot developer, to utilize Bot Builder's internal st
 > *Note:* Bot Builder's `ConversationState` requires the developer to mutate the state then call `saveChanges()` to commit the mutated state to the session context. To avoid imposing mutative patterns on the developer, we expose a `save(data)` function which expects a new state which we will save onto the context on behalf of the developer. To accomplish this we scrub all properties of the old state then load in the new values and call Bot Builder's `saveChanges()`.
 
 ### Wolf State
-`createWolfStorageLayer`: A factory function which is composed from `createBotbuilderStorageLayer`.  In order for wolf to be stateless and free of storage implementations, we provide a convenience function for the developer to call when setting up the bot.  This will hook the `wolfState` persistance mechanism into the botbuilder storage.
+`createWolfStorageLayer`: A factory function which is composed from `createBotbuilderStorageLayer`.  In order for wolf to be stateless and free of storage implementations, we provide a convenience function for the developer to call when setting up the bot.  This will hook the `wolfState` persistance mechanism into the Bot Builder storage.
 
 ---------------------------------------
 ## Examples
@@ -27,10 +27,10 @@ This package allows you, the bot developer, to utilize Bot Builder's internal st
 ## Step-by-step Guide on Building a Stateful Echo Bot
 We will build a stateful echo bot where the bot will remember your name, if you greet it with "hi" or "hi my name is {your name}"
 
-1. If you don't have node installed, please install Node (LTS version) by going to the [NodeJS website]
-2. Go to [Bot Builder Docs] on how to create a bot 
-3. During `yo` prompt flow: When asked "Which proramming language do you want to use?", select "TypeScript"
-4. During `yo` prompt flow: When asked about "Which template would you like to start with?", select "Empty Bot"
+1. If you don't have node installed, please install Node (LTS version) by going to the [NodeJS website].
+2. Go to [Bot Builder Docs] on how to create a bot and follow the steps until you tun `yo botbuilder`.
+3. During `yo` prompt flow: When asked "Which programming language do you want to use?", select "TypeScript".
+4. During `yo` prompt flow: When asked about "Which template would you like to start with?", select "Empty Bot".
 5. Navigate into the project you just created with `cd <project-name>`, and run:
 ```
 npm install wolf-core@alpha wolf-botbuilder@alpha
@@ -53,7 +53,7 @@ import { BotFrameworkAdapter, ConversationState, MemoryStorage } from 'botbuilde
 import { createBotbuilderStorageLayer, createWolfStorageLayer } from 'wolf-botbuilder';
 ```
 
-8. In `src/index.ts`, create the Bot Builder and Wolf storage layers below the adapter. We will evntually pass these storage layers into Wolf which will allow the developer to `read`/`save` state within the user defined functions utilizing Bot Builder's `TurnContext`.
+8. In `src/index.ts`, create the Bot Builder and Wolf storage layers below the adapter. We will eventually pass these storage layers into Wolf which will allow the developer to `read`/`save` state within the user defined functions utilizing Bot Builder's `TurnContext`.
 ```ts
 // Setup storage layer
 const memoryStorage = new MemoryStorage();
@@ -153,7 +153,7 @@ export default (context: TurnContext): NlpResult => {
 
 ```
 
-14. **Define your abilities:** Create a `src/abilities.ts` file with the following content. This file is where the developer will define the desired user infromation, and how to handle the information once it is received. We have provided two simple abilities which greet the user and echos the user message.
+14. **Define your abilities:** Create a `src/abilities.ts` file with the following content. This file is where the developer will define the desired user information, and how to handle the information once it is received. We have provided two simple abilities which greet the user and echos the user message.
 ```ts
 import { Ability } from 'wolf-core';
 import { IConversationData } from './bot';
