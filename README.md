@@ -7,7 +7,7 @@ If you have not already, we encourage you to check out [Wolf] to learn more abou
 
 _Fun fact: Wolf can easily integrate with many popular frameworks, to find out more check out the [Wolf] docs or [Wolf-Packs]._
 
-## What is provided?
+## Core Concepts
 This package allows you, the bot developer, to utilize Bot Builder's internal storage layer to persist the `conversationState` and the `wolfState` while conforming to the storage interface that Wolf provides. There are two convenience functions provided that allows the developer to use the Bot Builder's `turnContext` as a mechanism to persist state. Both the `conversationState` and the `wolfState` are required to be persisted and supplied since Wolf is a stateless function that is run on every turn.
 
 ### Custom Conversation State
@@ -28,107 +28,135 @@ This package allows you, the bot developer, to utilize Bot Builder's internal st
 We will build a stateful echo bot where the bot will remember your name, if you greet it with "hi" or "hi my name is {your name}"
 
 1. If you don't have node installed, please install Node (LTS version) by going to the [NodeJS website]
-2. Go to [Bot Builder Docs] on how to create a bot
-3. When asked about "Which template would you like to start with?" during the `yo` generator prompt flow, select **"Empty Bot"**
-4. Go into the project you just created, and run `npm install wolf-core@alpha wolf-botbuilder@alpha`
-5. At the top of the `src/bot.ts` insert the line to import `wolf` and wolf-botbuilder integration functions:
-```ts
-import * as wolf from 'wolf-core'
-import { createBotbuilderStorageLayer, createWolfStorageLayer } from 'wolf-botbuilder'
+2. Go to [Bot Builder Docs] on how to create a bot 
+3. During `yo` prompt flow: When asked "Which proramming language do you want to use?", select "TypeScript"
+4. During `yo` prompt flow: When asked about "Which template would you like to start with?", select "Empty Bot"
+5. Navigate into the project you just created with `cd <project-name>`, and run:
+```
+npm install wolf-core@alpha wolf-botbuilder@alpha
 ```
 
-6. Create the storage layers somewhere in the app level:
-```ts
-const adapter = new BotFrameworkAdapter();
+6. Before we get into the code, let's make some quick edits to the `/tslint.json`. Add these rules into the `"rules"` object before `"max-line-length"`. The first rule disables universally alphabetizing property order, instead, bases the order on what is declared by the interface. The second rule allows you to use generic array types which we will need later. 
+```json
+"object-literal-sort-keys": {
+    "options": "match-declaration-order"
+},
+"array-type": [
+    true,
+    "array"
+],
+```
 
-// add the following lines:
+7. Navigate into `src/index.ts` and import the required methods from both `botbuilder` and `wolf-core` at the top of the file. We will utilize these Wolf storage layer functions designed to integrate with the Bot Builder storage. In this example we will use the Bot Builder's `MemoryStorage`.
+```ts
+import { BotFrameworkAdapter, ConversationState, MemoryStorage } from 'botbuilder';
+import { createBotbuilderStorageLayer, createWolfStorageLayer } from 'wolf-botbuilder';
+```
+
+8. In `src/index.ts`, create the Bot Builder and Wolf storage layers below the adapter. We will evntually pass these storage layers into Wolf which will allow the developer to `read`/`save` state within the user defined functions utilizing Bot Builder's `TurnContext`.
+```ts
 // Setup storage layer
 const memoryStorage = new MemoryStorage();
-const conversationState = new ConversationState(memoryStorage)
-const conversationStorageLayer = createBotbuilderStorageLayer<object>(conversationState)
-const wolfStorageLayer = createWolfStorageLayer(conversationState)
+const conversationState = new ConversationState(memoryStorage);
+const conversationStorageLayer = createBotbuilderStorageLayer<object>(conversationState);
+const wolfStorageLayer = createWolfStorageLayer(conversationState);
 ```
 
-7. In `src/bot.ts` define your shape of your conversation data:
+9. Navigate into `src/bot.ts` and import `wolf-core` at the top of the file.
 ```ts
-export interface ConversationData {
-  name?: string // this is where your name is going to be stored
+import * as wolf from 'wolf-core';
+```
+
+10. In `src/bot.ts` define the shape of your conversation data above the `MyBot` class. This `IConversationData` is a basic interface placeholder which should be replaced with the desired state shape.
+```ts
+export interface IConversationData {
+    name?: string; // this is where your name is going to be stored
 }
 ```
 
-8. In `src/bot.ts` configure your Bot class to take in the `conversationStorageLayer` and the `wolfStorageLayer`
+11. Remaining in `src/bot.ts`, configure your Bot class to take in the `conversationStorageLayer` and the `wolfStorageLayer` parameters and set the private class variables. Replace the entire `class MyBot` with: 
 ```ts
 export class MyBot {
 
-  /* Add the following code in your Bot class*/
-  private wolfStorageLayer: wolf.StorageLayerFactory<TurnContext, wolf.WolfState>
-  private conversationStorageLayer: wolf.StorageLayerFactory<TurnContext, ConversationData>
+    /* Add the following code in your Bot class*/
+    private wolfStorageLayer: wolf.StorageLayerFactory<TurnContext, wolf.WolfState>;
+    private conversationStorageLayer: wolf.StorageLayerFactory<TurnContext, IConversationData>;
 
-  constructor(
-    wolfStorageLayer: wolf.StorageLayerFactory<TurnContext, wolf.WolfState>,
-    conversationStorageLayer: wolf.StorageLayerFactory<TurnContext, ConversationData>
-  ) {
-    this.wolfStorageLayer = wolfStorageLayer
-    this.conversationStorageLayer = conversationStorageLayer
-  }
+    constructor(
+        wolfStorageLayer: wolf.StorageLayerFactory<TurnContext, wolf.WolfState>,
+        conversationStorageLayer: wolf.StorageLayerFactory<TurnContext, IConversationData>,
+    ) {
+        this.wolfStorageLayer = wolfStorageLayer;
+        this.conversationStorageLayer = conversationStorageLayer;
+    }
 
-  // ...onTurn method below here
+    /**
+     * Use onTurn to handle an incoming activity, received from a user, process it, and reply as needed
+     *
+     * @param {TurnContext} turnContext context object.
+     */
+    public onTurn = async (turnContext: TurnContext) => {
+        // see https://aka.ms/about-bot-activity-message to learn more about the message and other activity types
+        await turnContext.sendActivity(`[${turnContext.activity.type} event detected]`);
+    }
 }
 ```
 
-9. In `src/index.ts` instantiate your bot with the two storage layers you created by changing to line like so
+12. In `src/index.ts` instantiate your bot with the two storage layers we created created by replacing `new MyBot()` with
 ```ts
 const myBot = new MyBot(wolfStorageLayer, conversationStorageLayer);
 ```
 
-10. **Define your NLP**: we are going to use a very simple regex-based NLP that detects "hi" and "hi my name is ..."  Create a file in `src/nlp.ts` with the code below: (Checkout out the examples/echoBot/nlp.ts for the annotated version of the code to see what it's doing)
+13. **Define your NLP**: We are going to use a very simple regex-based NLP that detects "hi" and "hi my name is ...". Create a file `src/nlp.ts` with the code below: (Checkout out the examples/echoBot/nlp.ts for the annotated version of the code to see what it's doing).
 ```ts
-import { TurnContext } from 'botbuilder'
-import { NlpEntity, NlpResult } from 'wolf-core'
+import { TurnContext } from 'botbuilder';
+import { NlpEntity, NlpResult } from 'wolf-core';
 
-const greetTest = new RegExp('hi')
+const greetTest = new RegExp('hi');
 const nameRecognizer = (input: string): NlpEntity => {
-  const nameReg = /my name is (\w*)/
-  const result = nameReg.exec(input)
+  const nameReg = /my name is (\w*)/;
+  const result = nameReg.exec(input);
   if (!result) {
-    return null
+    return null;
   }
   return {
     name: 'name',
     value: result[1],
-    text: result[1]
-  }
-}
+    text: result[1],
+  };
+};
 
 export default (context: TurnContext): NlpResult => {
-  const isGreeting = greetTest.test(context.activity.text)
+  const isGreeting = greetTest.test(context.activity.text);
   if (isGreeting) {
-    const nameFound = nameRecognizer(context.activity.text)
+    const nameFound = nameRecognizer(context.activity.text);
     if (nameFound) {
       return {
         message: context.activity.text,
         intent: 'greet',
-        entities: [nameFound]
-      }
+        entities: [nameFound],
+      };
     }
     return {
       message: context.activity.text,
       intent: 'greet',
-      entities: []
-    }
+      entities: [],
+    };
   }
 
   return {
     message: context.activity.text,
     intent: null,
-    entities: []
-  }
-}
+    entities: [],
+  };
+};
+
 ```
-11. **Define your abilities:** Create a `src/abilities.ts` file with the following content:
+
+14. **Define your abilities:** Create a `src/abilities.ts` file with the following content. This file is where the developer will define the desired user infromation, and how to handle the information once it is received. We have provided two simple abilities which greet the user and echos the user message.
 ```ts
-import { Ability } from 'wolf-core'
-import { ConversationData } from './bot'
+import { Ability } from 'wolf-core';
+import { IConversationData } from './bot';
 
 export default [
   {
@@ -138,51 +166,58 @@ export default [
       query: () => 'what is your name?',
       validate: () => ({isValid: true, reason: null}),
       retry: () => '',
-      onFill: () => {return}
+      onFill: () => { return; },
     }],
     onComplete: (convoState, submittedData) => {
-      convoState.name = submittedData.name
-      return `hi ${submittedData.name}!`
-    }
+      convoState.name = submittedData.name;
+      return `hi ${submittedData.name}!`;
+    },
   },
   {
     name: 'echo',
     slots: [],
     onComplete: (convoState, submittedData, {getMessageData}) => {
-      const messageData = getMessageData()
-      const message = messageData.rawText
+      const messageData = getMessageData();
+      const message = messageData.rawText;
       if (convoState.name) {
-        return `${convoState.name} said "${message}"`
+        return `${convoState.name} said "${message}"`;
       }
-      return `You said "${message}"`
-    }
-  }
-] as Ability<ConversationData>[]
+      return `You said "${message}"`;
+    },
+  },
+] as Ability<IConversationData>[];
+
 ```
-12. **Finally, Create the wolf runner in your bot class (onTurn method) and send the result back to the user:**  In your `src/bot.ts`, replace the body of the `onTurn` method:
+
+15. Import the `abilities` and `nlp` that we just created in `src/bot.ts` right below the import from `wolf-core` near the top of the file.
 ```ts
-export class MyBot {
-  // constructor code above here...
-
-  public onTurn = async (turnContext: TurnContext) => {
-
-    /* Put the follow code in the onTurn method body */
-    const wolfResult = await wolf.run(
-      this.wolfStorageLayer(turnContext),
-      this.conversationStorageLayer(turnContext, {}),
-      () => nlp(turnContext),
-      () => abilities,
-      'echo'
-    )
-
-    const sendActivities = wolfResult.messageStringArray.map((message) => turnContext.sendActivity(message))
-    await Promise.all(sendActivities)
-
-    // delete the default line "await turnContext.sendActivity(`[${ turnContext.activity.type } event detected]`);"
-  }
-}
-
+import abilities from './abilities';
+import nlp from './nlp';
 ```
+
+16. Create the wolf runner in your bot class (`onTurn` method) and send the result back to the user. In your `src/bot.ts`, replace the `onTurn` method with:
+```ts
+public onTurn = async (turnContext: TurnContext) => {
+        // Has to be a message, ignores all other activity (such as conversation update events)
+        if (turnContext.activity.type !== 'message') {
+            return;
+        }
+
+        /* Put the follow code in the onTurn method body */
+        const wolfResult = await wolf.run(
+            this.wolfStorageLayer(turnContext),
+            this.conversationStorageLayer(turnContext, {}),
+            () => nlp(turnContext),
+            () => abilities,
+            'echo',
+        );
+
+        const sendActivities = wolfResult.messageStringArray.map((message) => turnContext.sendActivity(message));
+        await Promise.all(sendActivities);
+    }
+```
+
+17. The last step is to run `npm start` which will build and run your bot.
 
 [alarmBot]: examples/alarmBot
 [echoBot]: examples/echoBot
