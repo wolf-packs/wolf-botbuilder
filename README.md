@@ -150,7 +150,6 @@ export default (context: TurnContext): NlpResult => {
     entities: [],
   };
 };
-
 ```
 
 14. **Define your abilities:** Create a `src/abilities.ts` file with the following content. This file is where the developer will define the desired user information, and how to handle the information once it is received. We have provided two simple abilities which greet the user and echos the user message.
@@ -186,7 +185,6 @@ export default [
     },
   },
 ] as Ability<IConversationData>[];
-
 ```
 
 15. Import the `abilities` and `nlp` that we just created in `src/bot.ts` right below the import from `wolf-core` near the top of the file.
