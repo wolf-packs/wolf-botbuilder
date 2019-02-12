@@ -22,7 +22,7 @@ interface AnyObject {
 export const createBotbuilderStorageLayer = <T extends AnyObject>(
   conversationState: ConversationState,
   statePropertyName: string = 'CONVERSATION_STATE'
-) : wolf.StorageLayerFactory<TurnContext, T> => {
+): wolf.StorageLayerFactory<TurnContext, T> => {
   // Bot Builder pattern to create a new store in state mapped to a key `statePropertyName`
   const convoStore = conversationState.createProperty(statePropertyName)
   return (botbuilderTurnContext: TurnContext, initialState?: T): wolf.StorageLayer<T> => {
@@ -68,9 +68,9 @@ export const createBotbuilderStorageLayer = <T extends AnyObject>(
  * @param conversationState Bot builder's ConversationState instance
  * @returns Wolf storage layer functions
  */
-export const createWolfStorageLayer = (conversationState: ConversationState): 
+export const createWolfStorageLayer = (conversationState: ConversationState):
   wolf.StorageLayerFactory<TurnContext, wolf.WolfState> => {
   const wolfStorageLayer = createBotbuilderStorageLayer<wolf.WolfState>(conversationState, 'WOLF_STATE')
-  return (botbuilderTurnContext: TurnContext): wolf.WolfStateStorage => 
+  return (botbuilderTurnContext: TurnContext): wolf.WolfStateStorage =>
     wolfStorageLayer(botbuilderTurnContext, wolf.getDefaultWolfState())
 }
