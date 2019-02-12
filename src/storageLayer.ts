@@ -16,7 +16,7 @@ interface AnyObject {
  * Microsoft Bot Builder utilizing TurnContext.
  * 
  * @param conversationState Bot Builder's ConversationState instance
- * @param statePropertyName Optional state proprty name, default is 'CONVERSATION_STATE'
+ * @param statePropertyName Optional state property name, default is 'CONVERSATION_STATE'
  * @returns Wolf storage layer functions
  */
 export const createBotbuilderStorageLayer = <T extends AnyObject>(
