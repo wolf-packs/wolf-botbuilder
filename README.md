@@ -47,7 +47,7 @@ npm install wolf-core@alpha wolf-botbuilder@alpha
 ],
 ```
 
-7. Navigate into `src/index.ts` and import the required methods from both `botbuilder` and `wolf-core` at the top of the file. We will utilize these Wolf storage layer functions designed to integrate with the Bot Builder storage. In this example we will use the Bot Builder's `MemoryStorage`.
+7. Navigate into `src/index.ts` and import the required methods from both `botbuilder` and `wolf-core`. Replace the `import botbuilder` line with the lines below. We will utilize these Wolf storage layer functions designed to integrate with the Bot Builder storage. In this example we will use the Bot Builder's `MemoryStorage`.
 ```ts
 import { BotFrameworkAdapter, ConversationState, MemoryStorage } from 'botbuilder';
 import { createBotbuilderStorageLayer, createWolfStorageLayer } from 'wolf-botbuilder';
