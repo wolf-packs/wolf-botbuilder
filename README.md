@@ -28,7 +28,7 @@ This package allows you, the bot developer, to utilize Bot Builder's internal st
 We will build a stateful echo bot where the bot will remember your name, if you greet it with "hi" or "hi my name is {your name}"
 
 1. If you don't have node installed, please install Node (LTS version) by going to the [NodeJS website].
-2. Go to [Bot Builder Docs] on how to create a bot and follow the steps until you tun `yo botbuilder`.
+2. Go to [Bot Builder Docs] on how to create a bot and follow the steps until you run `yo botbuilder`.
 3. During `yo` prompt flow: When asked "Which programming language do you want to use?", select "TypeScript".
 4. During `yo` prompt flow: When asked about "Which template would you like to start with?", select "Empty Bot".
 5. Navigate into the project you just created with `cd <project-name>`, and run:
