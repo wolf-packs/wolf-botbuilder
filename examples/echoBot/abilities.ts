@@ -1,5 +1,6 @@
 import { Ability } from 'wolf-core'
 import { ConversationData } from './bot'
+import { StorageLayerType } from '../../src'
 
 export default [
   {
@@ -11,7 +12,8 @@ export default [
       retry: () => '',
       onFill: () => {return}
     }],
-    onComplete: (convoState, submittedData) => {
+    onComplete: async ({read}, submittedData) => {
+      const convoState = await read()
       convoState.name = submittedData.name
       return `hi ${submittedData.name}!`
     }
@@ -19,7 +21,8 @@ export default [
   {
     name: 'echo',
     slots: [],
-    onComplete: (convoState, submittedData, {getMessageData}) => {
+    onComplete: async ({read}, submittedData, {getMessageData}) => {
+      const convoState = await read()
       const messageData = getMessageData()
       const message = messageData.rawText
       if (convoState.name) {
@@ -28,4 +31,4 @@ export default [
       return `You said "${message}"`
     }
   }
-] as Ability<ConversationData>[]
+] as Ability<ConversationData, StorageLayerType<ConversationData>>[]

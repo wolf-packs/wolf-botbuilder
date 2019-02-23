@@ -1,5 +1,6 @@
 import { randomElement } from './helpers'
-import * as wolf from 'wolf-core'
+import { Ability } from 'wolf-core'
+import { StorageLayerType } from '../../src';
 
 interface Alarm {
   alarmName: string,
@@ -24,7 +25,7 @@ export const abilities = [
       {
         name: 'alarmName',
         query: () => { return 'What is the name of the alarm?' },
-        retry: (convoState, submittedData, turnCount) => {
+        retry: (convoState, submittedValue, turnCount) => {
           const phrase = [`Please try a new name (attempt: ${turnCount})`, `Try harder.. (attempt: ${turnCount})`]
           if (turnCount > phrase.length - 1) {
             return phrase[phrase.length - 1]
@@ -37,12 +38,12 @@ export const abilities = [
           }
           return { isValid: true, reason: null }
         },
-        onFill: (value) => `ok! name is set to ${value}.`
+        onFill: (s, value) => `ok! name is set to ${value}.`
       },
       {
         name: 'alarmTime',
         query: () => { return 'What is the time you want to set?' },
-        retry: (convoState, submittedData, turnCount) => {
+        retry: (convoState, submittedValue, turnCount) => {
           const phrases: string[] = ['let\'s try again', 'what is the time you want to set?']
           return randomElement(phrases)
         },
@@ -57,22 +58,18 @@ export const abilities = [
             isValid: true
           }
         },
-        onFill: (value) => `ok! time is set to ${value}.`
+        onFill: (s, value) => `ok! time is set to ${value}.`
       }
     ],
-    onComplete: (convoState, submittedData) => {
-      return new Promise((resolve, reject) => {
+    onComplete: async ({read}, submittedData) => {
         const value = submittedData
+        const convoState = await read()
         const alarms = convoState.alarms || []
         convoState.alarms = [
           ...alarms,
           value
         ]
-
-        setTimeout(() => {
-          resolve(`Your ${value.alarmName} is added!`)
-        }, 500)
-      })
+        return `Your ${value.alarmName} is added!`
     }
   },
   {
@@ -85,8 +82,9 @@ export const abilities = [
         }
       }
     ],
-    onComplete: (convoState, submittedData) => {
+    onComplete: async ({read}, submittedData) => {
       const { alarmName } = submittedData
+      const convoState = await read()
       const stateAlarms = convoState.alarms || []
 
       // Check if alarm name exists
@@ -103,7 +101,8 @@ export const abilities = [
   {
     name: 'listAlarms',
     slots: [],
-    onComplete: (convoState) => {
+    onComplete: async ({read}) => {
+      const convoState = await read()
       const alarms = convoState.alarms || []
 
       if (alarms.length === 0) {
@@ -122,4 +121,4 @@ export const abilities = [
       return message
     }
   }
-] as wolf.Ability<UserState>[]
+] as Ability<UserState, StorageLayerType<UserState>>[]
