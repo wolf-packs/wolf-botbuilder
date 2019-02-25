@@ -12,7 +12,7 @@ export default [
       retry: () => '',
       onFill: () => {return}
     }],
-    onComplete: async ({read}, submittedData) => {
+    onComplete: async (submittedData, {read}) => {
       const convoState = await read()
       convoState.name = submittedData.name
       return `hi ${submittedData.name}!`
@@ -21,7 +21,7 @@ export default [
   {
     name: 'echo',
     slots: [],
-    onComplete: async ({read}, submittedData, {getMessageData}) => {
+    onComplete: async (submittedData, {read}, {getMessageData}) => {
       const convoState = await read()
       const messageData = getMessageData()
       const message = messageData.rawText

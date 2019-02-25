@@ -24,7 +24,7 @@ export default [
       {
         name: 'alarmName',
         query: () => { return 'What is the name of the alarm?' },
-        retry: (stateFuncs, submittedValue, turnCount) => {
+        retry: (submittedValue, convoStorageLayer, turnCount) => {
           const phrase = [`Please try a new name (attempt: ${turnCount})`, `Try harder.. (attempt: ${turnCount})`]
           if (turnCount > phrase.length - 1) {
             return phrase[phrase.length - 1]
@@ -37,12 +37,12 @@ export default [
           }
           return { isValid: true, reason: null }
         },
-        onFill: (s, value) => `ok! name is set to ${value}.`
+        onFill: (value) => `ok! name is set to ${value}.`
       },
       {
         name: 'alarmTime',
         query: () => { return 'What is the time you want to set?' },
-        retry: (submittedValue, stateFuncs, turnCount) => {
+        retry: (submittedValue, convoStorageLayer, turnCount) => {
           return 'what is the time you want to set?'
         },
         validate: (value: string) => {
@@ -59,7 +59,7 @@ export default [
         onFill: (value) => `ok! time is set to ${value}.`
       }
     ],
-    onComplete: async ({read}, submittedData) => {
+    onComplete: async (submittedData, {read}) => {
       const convoState = await read()
       const value = submittedData
       const alarms = convoState.alarms || []
@@ -81,7 +81,7 @@ export default [
         }
       }
     ],
-    onComplete: async ({read}, submittedData) => {
+    onComplete: async (submittedData, {read}) => {
       const { alarmName } = submittedData
       const convoState = await read();
       const stateAlarms = convoState.alarms || []
@@ -100,7 +100,7 @@ export default [
   {
     name: 'listAlarms',
     slots: [],
-    onComplete: async ({read}) => {
+    onComplete: async (submittedData, {read}) => {
       const convoState = await read()
       const alarms = convoState.alarms || []
 
@@ -113,7 +113,7 @@ export default [
   {
     name: 'listAbility',
     slots: [],
-    onComplete: (stateFuncs, submittedData, { getAbilityList }) => {
+    onComplete: (submittedData, convoStorageLayer, { getAbilityList }) => {
       const abilityList = getAbilityList()
       const abilities = abilityList.map((ability) => ability.name).join(', ')
       const message = `Here are my abilities: ${abilities}`
