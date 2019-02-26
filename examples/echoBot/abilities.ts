@@ -7,14 +7,14 @@ export default [
     name: 'greet',
     slots: [{
       name: 'name',
-      query: () => 'what is your name?',
-      validate: () => ({isValid: true, reason: null}),
-      retry: () => '',
-      onFill: () => {return}
+      query: () => 'what is your name?'
     }],
-    onComplete: async (submittedData, {read}) => {
-      const convoState = await read()
-      convoState.name = submittedData.name
+    onComplete: async (submittedData, {save}) => {
+      const newState = {
+        name: submittedData.name
+      }
+      await save(newState)
+
       return `hi ${submittedData.name}!`
     }
   },
@@ -23,6 +23,7 @@ export default [
     slots: [],
     onComplete: async (submittedData, {read}, {getMessageData}) => {
       const convoState = await read()
+      console.log(convoState)
       const messageData = getMessageData()
       const message = messageData.rawText
       if (convoState.name) {

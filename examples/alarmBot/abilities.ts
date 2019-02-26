@@ -61,14 +61,19 @@ export const abilities = [
         onFill: (value) => `ok! time is set to ${value}.`
       }
     ],
-    onComplete: async (submittedData, {read}) => {
+    onComplete: async (submittedData, {read, save}) => {
         const value = submittedData
         const convoState = await read()
-        const alarms = convoState.alarms || []
-        convoState.alarms = [
-          ...alarms,
-          value
-        ]
+        const prevAlarms = convoState.alarms || []
+        const newState = {
+          alarms: [
+            ...prevAlarms,
+            value
+          ]
+        }
+
+        await save(newState)
+
         return `Your ${value.alarmName} is added!`
     }
   },
@@ -82,7 +87,7 @@ export const abilities = [
         }
       }
     ],
-    onComplete: async (submittedData, {read}) => {
+    onComplete: async (submittedData, {read, save}) => {
       const { alarmName } = submittedData
       const convoState = await read()
       const stateAlarms = convoState.alarms || []
@@ -93,8 +98,13 @@ export const abilities = [
       }
 
       // Remove alarm
-      const alarms = stateAlarms.filter((alarm: Alarm) => alarm.alarmName !== alarmName)
-      convoState.alarms = alarms
+      const newAlarms = stateAlarms.filter((alarm: Alarm) => alarm.alarmName !== alarmName)
+      const newState = {
+        alarms: newAlarms
+      }
+      
+      await save(newState)
+
       return `The ${alarmName} has been removed.`
     }
   },

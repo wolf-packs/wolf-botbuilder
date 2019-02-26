@@ -59,17 +59,21 @@ export default [
         onFill: (value) => `ok! time is set to ${value}.`
       }
     ],
-    onComplete: async (submittedData, {read}) => {
-      const convoState = await read()
+    onComplete: async (submittedData, {read, save}) => {
       const value = submittedData
-      const alarms = convoState.alarms || []
-      convoState.alarms = [
-        ...alarms,
-        value
-      ]
+      const convoState = await read()
+      const prevAlarms = convoState.alarms || []
+      const newState = {
+        alarms: [
+          ...prevAlarms,
+          value
+        ]
+      }
+
+      await save(newState)
 
       return `Your ${value.alarmName} is added!`
-    }
+  }
   },
   {
     name: 'removeAlarm',
@@ -81,9 +85,9 @@ export default [
         }
       }
     ],
-    onComplete: async (submittedData, {read}) => {
+    onComplete: async (submittedData, {read, save}) => {
       const { alarmName } = submittedData
-      const convoState = await read();
+      const convoState = await read()
       const stateAlarms = convoState.alarms || []
 
       // Check if alarm name exists
@@ -92,8 +96,13 @@ export default [
       }
 
       // Remove alarm
-      const alarms = stateAlarms.filter((alarm: Alarm) => alarm.alarmName !== alarmName)
-      convoState.alarms = alarms
+      const newAlarms = stateAlarms.filter((alarm: Alarm) => alarm.alarmName !== alarmName)
+      const newState = {
+        alarms: newAlarms
+      }
+      
+      await save(newState)
+
       return `The ${alarmName} has been removed.`
     }
   },
