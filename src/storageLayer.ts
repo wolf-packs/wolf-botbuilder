@@ -10,6 +10,8 @@ interface AnyObject {
   [key: number]: any
 }
 
+export type StorageLayerType<T> = wolf.AllAsyncStorageLayer<T>
+
 /**
  * Creates storage layer to interface with Wolf based on the developer's custom state.
  * Factory function that allows the creation of Wolf storage layer interfaces specific to
@@ -25,8 +27,8 @@ export const createBotbuilderStorageLayer = <T extends AnyObject>(
 ): wolf.StorageLayerFactory<TurnContext, T> => {
   // Bot Builder pattern to create a new store in state mapped to a key `statePropertyName`
   const convoStore = conversationState.createProperty(statePropertyName)
-  return (botbuilderTurnContext: TurnContext, initialState?: T): wolf.StorageLayer<T> => {
-    const convoStateStorage: wolf.StorageLayer<T> = {
+  return (botbuilderTurnContext: TurnContext, initialState?: T): StorageLayerType<T> => {
+    const convoStateStorage: StorageLayerType<T> = {
       read: () => {
         // Return the state from the store
         return convoStore.get(botbuilderTurnContext, initialState)
@@ -53,7 +55,7 @@ export const createBotbuilderStorageLayer = <T extends AnyObject>(
         })
 
         // Save back to Bot Builder context
-        conversationState.saveChanges(botbuilderTurnContext)
+        return conversationState.saveChanges(botbuilderTurnContext)
       }
     }
     return convoStateStorage

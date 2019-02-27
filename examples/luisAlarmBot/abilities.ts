@@ -1,4 +1,5 @@
 import * as wolf from 'wolf-core'
+import { StorageLayerType } from '../../src';
 
 interface Alarm {
   alarmName: string,
@@ -23,7 +24,7 @@ export default [
       {
         name: 'alarmName',
         query: () => { return 'What is the name of the alarm?' },
-        retry: (convoState, submittedData, turnCount) => {
+        retry: (submittedValue, convoStorageLayer, turnCount) => {
           const phrase = [`Please try a new name (attempt: ${turnCount})`, `Try harder.. (attempt: ${turnCount})`]
           if (turnCount > phrase.length - 1) {
             return phrase[phrase.length - 1]
@@ -41,7 +42,7 @@ export default [
       {
         name: 'alarmTime',
         query: () => { return 'What is the time you want to set?' },
-        retry: (convoState, submittedData, turnCount) => {
+        retry: (submittedValue, convoStorageLayer, turnCount) => {
           return 'what is the time you want to set?'
         },
         validate: (value: string) => {
@@ -58,20 +59,21 @@ export default [
         onFill: (value) => `ok! time is set to ${value}.`
       }
     ],
-    onComplete: (convoState, submittedData) => {
-      return new Promise((resolve, reject) => {
-        const value = submittedData
-        const alarms = convoState.alarms || []
-        convoState.alarms = [
-          ...alarms,
+    onComplete: async (submittedData, {read, save}) => {
+      const value = submittedData
+      const convoState = await read()
+      const prevAlarms = convoState.alarms || []
+      const newState = {
+        alarms: [
+          ...prevAlarms,
           value
         ]
+      }
 
-        setTimeout(() => {
-          resolve(`Your ${value.alarmName} is added!`)
-        }, 500)
-      })
-    }
+      await save(newState)
+
+      return `Your ${value.alarmName} is added!`
+  }
   },
   {
     name: 'removeAlarm',
@@ -83,8 +85,9 @@ export default [
         }
       }
     ],
-    onComplete: (convoState, submittedData) => {
+    onComplete: async (submittedData, {read, save}) => {
       const { alarmName } = submittedData
+      const convoState = await read()
       const stateAlarms = convoState.alarms || []
 
       // Check if alarm name exists
@@ -93,15 +96,21 @@ export default [
       }
 
       // Remove alarm
-      const alarms = stateAlarms.filter((alarm: Alarm) => alarm.alarmName !== alarmName)
-      convoState.alarms = alarms
+      const newAlarms = stateAlarms.filter((alarm: Alarm) => alarm.alarmName !== alarmName)
+      const newState = {
+        alarms: newAlarms
+      }
+      
+      await save(newState)
+
       return `The ${alarmName} has been removed.`
     }
   },
   {
     name: 'listAlarms',
     slots: [],
-    onComplete: (convoState) => {
+    onComplete: async (submittedData, {read}) => {
+      const convoState = await read()
       const alarms = convoState.alarms || []
 
       if (alarms.length === 0) {
@@ -113,11 +122,11 @@ export default [
   {
     name: 'listAbility',
     slots: [],
-    onComplete: (convoState, submittedData, { getAbilityList }) => {
+    onComplete: (submittedData, convoStorageLayer, { getAbilityList }) => {
       const abilityList = getAbilityList()
       const abilities = abilityList.map((ability) => ability.name).join(', ')
       const message = `Here are my abilities: ${abilities}`
       return message
     }
   }
-] as wolf.Ability<UserState>[]
+] as wolf.Ability<UserState, StorageLayerType<UserState>>[]
