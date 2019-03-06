@@ -28,7 +28,7 @@ const adapter = new BotFrameworkAdapter({
   appPassword: process.env.microsoftAppPassword,
 })
 
-// Settup storage layer
+// Setup storage layer
 const memoryStorage = new MemoryStorage()
 const conversationState = new ConversationState(memoryStorage)
 const conversationStorageLayer = createBotbuilderStorageLayer<UserState>(conversationState)
@@ -42,7 +42,7 @@ const flow: wolf.Flow<UserState, StorageLayerType<UserState>> = {
 // Listen for incoming requests
 server.post('/api/messages', (req, res) => {
   adapter.processActivity(req, res, async (context) => {
-    
+
     // Has to be a message, ignores all other activity (such as conversation update events)
     if (context.activity.type !== 'message') {
       return

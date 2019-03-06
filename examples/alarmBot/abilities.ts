@@ -1,4 +1,3 @@
-import { randomElement } from './helpers'
 import { Ability } from 'wolf-core'
 import { StorageLayerType } from '../../src';
 
@@ -29,20 +28,20 @@ export const abilities = [
         slotName: 'alarmTime'
       }
     ],
-    onComplete: async (submittedData, {read, save}) => {
-        const value = submittedData
-        const convoState = await read()
-        const prevAlarms = convoState.alarms || []
-        const newState = {
-          alarms: [
-            ...prevAlarms,
-            value
-          ]
-        }
+    onComplete: async (submittedData, { read, save }) => {
+      const value = submittedData
+      const convoState = await read()
+      const prevAlarms = convoState.alarms || []
+      const newState = {
+        alarms: [
+          ...prevAlarms,
+          value
+        ]
+      }
 
-        await save(newState)
+      await save(newState)
 
-        return `Your ${value.alarmName} is added!`
+      return `Your ${value.alarmName} is added!`
     }
   },
   {
@@ -52,7 +51,7 @@ export const abilities = [
         slotName: 'alarmName'
       }
     ],
-    onComplete: async (submittedData, {read, save}) => {
+    onComplete: async (submittedData, { read, save }) => {
       const { alarmName } = submittedData
       const convoState = await read()
       const stateAlarms = convoState.alarms || []
@@ -67,7 +66,7 @@ export const abilities = [
       const newState = {
         alarms: newAlarms
       }
-      
+
       await save(newState)
 
       return `The ${alarmName} has been removed.`
@@ -76,7 +75,7 @@ export const abilities = [
   {
     name: 'listAlarms',
     traces: [],
-    onComplete: async (submittedData, {read}) => {
+    onComplete: async (submittedData, { read }) => {
       const convoState = await read()
       const alarms = convoState.alarms || []
 
