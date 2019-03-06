@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "npm run clean-dist && tsc",
     "build:dev": "tsc --p tsconfig.example.json",
     "clean-dist": "rm -rf dist",
     "release:alpha": "npm run clean-dist && npm run build && npm publish --tag alpha",
