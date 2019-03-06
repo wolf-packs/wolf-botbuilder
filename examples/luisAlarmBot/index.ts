@@ -7,7 +7,8 @@ import { createBotbuilderStorageLayer, createWolfStorageLayer } from '../../src'
 // Bring in Bot Builder dependency
 import * as restify from 'restify'
 import { BotFrameworkAdapter, MemoryStorage, ConversationState, TurnContext } from 'botbuilder'
-import { MyBot, ConversationData } from './bot'
+import { MyBot } from './bot'
+import { UserState } from './abilities'
 
 // Create HTTP server with restify
 const server = restify.createServer()
@@ -24,7 +25,7 @@ const adapter = new BotFrameworkAdapter({
 // Setup storage layer
 const memoryStorage = new MemoryStorage()
 const conversationState = new ConversationState(memoryStorage)
-const conversationStorageLayer = createBotbuilderStorageLayer<ConversationData>(conversationState)
+const conversationStorageLayer = createBotbuilderStorageLayer<UserState>(conversationState)
 const wolfStorageLayer = createWolfStorageLayer(conversationState)
 
 const myBot = new MyBot(wolfStorageLayer, conversationStorageLayer)

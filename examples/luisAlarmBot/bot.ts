@@ -4,19 +4,10 @@
 import { TurnContext } from 'botbuilder'
 import * as wolf from 'wolf-core'
 import fetch from 'node-fetch'
-import { abilities } from './abilities'
+import { UserState, abilities } from './abilities'
 import { slots } from './slots'
 import { transformLuisToNlpResult } from './helpers/luis';
 import { StorageLayerType } from '../../src';
-
-interface Alarm {
-  alarmName: string,
-  alarmTime: string
-}
-
-export interface ConversationData {
-  alarms: Alarm[]
-}
 
 const luisEndpoint = process.env.LUIS_ENDPOINT
 
@@ -26,19 +17,19 @@ const callLuis = (context: TurnContext): Promise<wolf.NlpResult[]> => {
     .then((luisResult) => transformLuisToNlpResult(luisResult))
 }
 
-const flow: wolf.Flow<ConversationData, StorageLayerType<ConversationData>> = {
+const flow: wolf.Flow<UserState, StorageLayerType<UserState>> = {
   abilities,
   slots
 }
 
 export class MyBot {
 
-  private wolfStorageLayer: wolf.StorageLayerFactory<TurnContext, wolf.WolfState>
-  private conversationStorageLayer: wolf.StorageLayerFactory<TurnContext, ConversationData>
+  private wolfStorageLayer: wolf.StorageLayerFactory<TurnContext, wolf.WolfState, StorageLayerType<wolf.WolfState>>
+  private conversationStorageLayer: wolf.StorageLayerFactory<TurnContext, UserState, StorageLayerType<UserState>>
 
   constructor(
-    wolfStorageLayer: wolf.StorageLayerFactory<TurnContext, wolf.WolfState>,
-    conversationStorageLayer: wolf.StorageLayerFactory<TurnContext, ConversationData>
+    wolfStorageLayer: wolf.StorageLayerFactory<TurnContext, wolf.WolfState, StorageLayerType<wolf.WolfState>>,
+    conversationStorageLayer: wolf.StorageLayerFactory<TurnContext, UserState, StorageLayerType<UserState>>
   ) {
     this.wolfStorageLayer = wolfStorageLayer
     this.conversationStorageLayer = conversationStorageLayer

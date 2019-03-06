@@ -19,12 +19,12 @@ const flow: wolf.Flow<ConversationData, StorageLayerType<ConversationData>> = {
 
 export class MyBot {
 
-  private wolfStorageLayer: wolf.StorageLayerFactory<TurnContext, wolf.WolfState>
-  private conversationStorageLayer: wolf.StorageLayerFactory<TurnContext, ConversationData>
+  private wolfStorageLayer: wolf.StorageLayerFactory<TurnContext, wolf.WolfState, StorageLayerType<wolf.WolfState>>
+  private conversationStorageLayer: wolf.StorageLayerFactory<TurnContext, ConversationData, StorageLayerType<ConversationData>>
 
   constructor(
-    wolfStorageLayer: wolf.StorageLayerFactory<TurnContext, wolf.WolfState>,
-    conversationStorageLayer: wolf.StorageLayerFactory<TurnContext, ConversationData>
+    wolfStorageLayer: wolf.StorageLayerFactory<TurnContext, wolf.WolfState, StorageLayerType<wolf.WolfState>>,
+    conversationStorageLayer: wolf.StorageLayerFactory<TurnContext, ConversationData, StorageLayerType<ConversationData>>
   ) {
     this.wolfStorageLayer = wolfStorageLayer
     this.conversationStorageLayer = conversationStorageLayer
