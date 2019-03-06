@@ -10,56 +10,25 @@ export interface UserState {
   alarms: Alarm[]
 }
 
-export default [
+export const abilities = [
   {
     name: 'greeting',
-    slots: [],
+    traces: [],
     onComplete: () => {
       return 'Hello! Welcome to alarm bot.'
     }
   },
   {
     name: 'addAlarm',
-    slots: [
+    traces: [
       {
-        name: 'alarmName',
-        query: () => { return 'What is the name of the alarm?' },
-        retry: (submittedValue, convoStorageLayer, turnCount) => {
-          const phrase = [`Please try a new name (attempt: ${turnCount})`, `Try harder.. (attempt: ${turnCount})`]
-          if (turnCount > phrase.length - 1) {
-            return phrase[phrase.length - 1]
-          }
-          return phrase[turnCount]
-        },
-        validate: (value) => {
-          if (value.toLowerCase() === 'hao') {
-            return { isValid: false, reason: `${value} is not a good alarm name.` }
-          }
-          return { isValid: true, reason: null }
-        },
-        onFill: (value) => `ok! name is set to ${value}.`
+        slotName: 'alarmName'
       },
       {
-        name: 'alarmTime',
-        query: () => { return 'What is the time you want to set?' },
-        retry: (submittedValue, convoStorageLayer, turnCount) => {
-          return 'what is the time you want to set?'
-        },
-        validate: (value: string) => {
-          if (!value.toLowerCase().endsWith('pm') && !value.toLowerCase().endsWith('am')) {
-            return {
-              isValid: false,
-              reason: 'Needs to set PM or AM',
-            }
-          }
-          return {
-            isValid: true
-          }
-        },
-        onFill: (value) => `ok! time is set to ${value}.`
+        slotName: 'alarmTime'
       }
     ],
-    onComplete: async (submittedData, {read, save}) => {
+    onComplete: async (submittedData, { read, save }) => {
       const value = submittedData
       const convoState = await read()
       const prevAlarms = convoState.alarms || []
@@ -73,7 +42,7 @@ export default [
       await save(newState)
 
       return `Your ${value.alarmName} is added!`
-  }
+    }
   },
   {
     name: 'removeAlarm',
@@ -85,7 +54,7 @@ export default [
         }
       }
     ],
-    onComplete: async (submittedData, {read, save}) => {
+    onComplete: async (submittedData, { read, save }) => {
       const { alarmName } = submittedData
       const convoState = await read()
       const stateAlarms = convoState.alarms || []
@@ -100,7 +69,7 @@ export default [
       const newState = {
         alarms: newAlarms
       }
-      
+
       await save(newState)
 
       return `The ${alarmName} has been removed.`
@@ -109,7 +78,7 @@ export default [
   {
     name: 'listAlarms',
     slots: [],
-    onComplete: async (submittedData, {read}) => {
+    onComplete: async (submittedData, { read }) => {
       const convoState = await read()
       const alarms = convoState.alarms || []
 
@@ -121,7 +90,7 @@ export default [
   },
   {
     name: 'listAbility',
-    slots: [],
+    traces: [],
     onComplete: (submittedData, convoStorageLayer, { getAbilityList }) => {
       const abilityList = getAbilityList()
       const abilities = abilityList.map((ability) => ability.name).join(', ')

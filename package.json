@@ -1,6 +1,6 @@
 {
   "name": "wolf-botbuilder",
-  "version": "1.0.0-alpha.9",
+  "version": "1.0.0-alpha.10",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
@@ -24,7 +24,7 @@
     "@types/restify": "^7.2.7",
     "botbuilder": "^4.2.1",
     "restify": "^7.7.0",
-    "wolf-core": "3.0.0-alpha.10"
+    "wolf-core": "3.0.0-alpha.13"
   },
   "devDependencies": {
     "@types/dotenv": "^6.1.0",

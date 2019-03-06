@@ -2,13 +2,14 @@ import { Ability } from 'wolf-core'
 import { ConversationData } from './bot'
 import { StorageLayerType } from '../../src'
 
-export default [
+export const abilities =  [
   {
     name: 'greet',
-    slots: [{
-      name: 'name',
-      query: () => 'what is your name?'
-    }],
+    traces: [
+      {
+        slotName: 'name'
+      }
+    ],
     onComplete: async (submittedData, {save}) => {
       const newState = {
         name: submittedData.name
@@ -20,7 +21,7 @@ export default [
   },
   {
     name: 'echo',
-    slots: [],
+    traces: [],
     onComplete: async (submittedData, {read}, {getMessageData}) => {
       const convoState = await read()
       console.log(convoState)

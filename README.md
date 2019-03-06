@@ -112,7 +112,7 @@ const myBot = new MyBot(wolfStorageLayer, conversationStorageLayer);
 import { TurnContext } from 'botbuilder';
 import { NlpEntity, NlpResult } from 'wolf-core';
 
-const greetTest = new RegExp('hi');
+const greetTest = new RegExp('^hi');
 const nameRecognizer = (input: string): NlpEntity => {
   const nameReg = /my name is (\w*)/;
   const result = nameReg.exec(input);

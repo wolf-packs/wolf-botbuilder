@@ -5,22 +5,22 @@ import { createBotbuilderStorageLayer, createWolfStorageLayer } from '../../src'
 // Bring in Bot Builder dependency
 import * as restify from 'restify'
 import { BotFrameworkAdapter, MemoryStorage, ConversationState, TurnContext } from 'botbuilder'
-import { MyBot } from './bot';
+import { MyBot } from './bot'
 
 // Create HTTP server with restify
-const server = restify.createServer();
+const server = restify.createServer()
 server.listen(process.env.port || process.env.PORT || 3978, () => {
-  console.log(`\n${server.name} listening to ${server.url}`);
-});
+  console.log(`\n${server.name} listening to ${server.url}`)
+})
 
 // Create adapter (Bot Builder specific)
 const adapter = new BotFrameworkAdapter({
   appId: process.env.microsoftAppID,
   appPassword: process.env.microsoftAppPassword,
-});
+})
 
 // Setup storage layer
-const memoryStorage = new MemoryStorage();
+const memoryStorage = new MemoryStorage()
 const conversationState = new ConversationState(memoryStorage)
 const conversationStorageLayer = createBotbuilderStorageLayer<object>(conversationState)
 const wolfStorageLayer = createWolfStorageLayer(conversationState)
@@ -37,5 +37,5 @@ server.post('/api/messages', (req, res) => {
     }
 
     await myBot.onTurn(context)
-  });
-});
+  })
+})

@@ -4,8 +4,10 @@
 import { TurnContext } from 'botbuilder'
 import * as wolf from 'wolf-core'
 import fetch from 'node-fetch'
-import abilities from './abilities'
+import { abilities } from './abilities'
+import { slots } from './slots'
 import { transformLuisToNlpResult } from './helpers/luis';
+import { StorageLayerType } from '../../src';
 
 interface Alarm {
   alarmName: string,
@@ -18,10 +20,15 @@ export interface ConversationData {
 
 const luisEndpoint = process.env.LUIS_ENDPOINT
 
-const callLuis = (context: TurnContext): Promise<wolf.NlpResult> => {
+const callLuis = (context: TurnContext): Promise<wolf.NlpResult[]> => {
   return fetch(luisEndpoint + context.activity.text)
     .then((res) => res.json())
     .then((luisResult) => transformLuisToNlpResult(luisResult))
+}
+
+const flow: wolf.Flow<ConversationData, StorageLayerType<ConversationData>> = {
+  abilities,
+  slots
 }
 
 export class MyBot {
@@ -50,7 +57,7 @@ export class MyBot {
       this.wolfStorageLayer(turnContext),
       this.conversationStorageLayer(turnContext, {alarms: []}),
       () => callLuis(turnContext),
-      () => abilities,
+      () => flow,
       'echo'
     )
 
