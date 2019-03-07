@@ -1,5 +1,5 @@
 import { TurnContext } from 'botbuilder'
-import { NlpEntity, NlpResult } from 'wolf-core';
+import { NlpEntity, NlpResult } from 'wolf-core'
 
 // Creating a simple regex for hi to test if it is in the user message
 const greetTest = new RegExp('^hi')
@@ -18,7 +18,7 @@ const nameRecognizer = (input: string): NlpEntity | null => {
   }
 }
 
-export default (context: TurnContext): NlpResult => {
+export default (context: TurnContext): NlpResult[] => {
   // First test to see if the utterance is a greeting
   const isGreeting = greetTest.test(context.activity.text)
   if (isGreeting) {
@@ -26,24 +26,24 @@ export default (context: TurnContext): NlpResult => {
     const nameFound = nameRecognizer(context.activity.text)
     if (nameFound) {
       // if there is a name, return the entire Nlp Result with the name entity
-      return {
+      return [{
         message: context.activity.text,
         intent: 'greet',
         entities: [nameFound]
-      }
+      }]
     }
     // if there is no name, return the Nlp Result with no entities
-    return {
+    return [{
       message: context.activity.text,
       intent: 'greet',
       entities: []
-    }
+    }]
   }
 
   // if the utterance is not a greeting, just return the default Nlp Result
-  return {
+  return [{
     message: context.activity.text,
     intent: null,
     entities: []
-  }
+  }]
 }

@@ -2,11 +2,12 @@
 import * as wolf from 'wolf-core'
 
 // Import Wolf's Bot Builder storage layer
-// import { createBotbuilderStorageLayer, createWolfStorageLayer } from 'wolf-botbuilder'
-import { createBotbuilderStorageLayer, createWolfStorageLayer } from '../../src'
+// import { createBotbuilderStorageLayer, createWolfStorageLayer, StorageLayerType } from 'wolf-botbuilder'
+import { createBotbuilderStorageLayer, createWolfStorageLayer, StorageLayerType } from '../../src'
 
-// Import Wolf abilities
+// Import Wolf abilities and slots
 import { UserState, abilities } from './abilities'
+import { slots } from './slots'
 
 // Import NLP
 import nlp from './nlp'
@@ -16,22 +17,27 @@ import * as restify from 'restify'
 import { BotFrameworkAdapter, MemoryStorage, ConversationState } from 'botbuilder'
 
 // Create HTTP server with restify
-const server = restify.createServer();
+const server = restify.createServer()
 server.listen(process.env.port || process.env.PORT || 3978, () => {
-  console.log(`\n${server.name} listening to ${server.url}`);
-});
+  console.log(`\n${server.name} listening to ${server.url}`)
+})
 
 // Create adapter (Bot Builder specific)
 const adapter = new BotFrameworkAdapter({
   appId: process.env.microsoftAppID,
   appPassword: process.env.microsoftAppPassword,
-});
+})
 
 // Settup storage layer
-const memoryStorage = new MemoryStorage();
+const memoryStorage = new MemoryStorage()
 const conversationState = new ConversationState(memoryStorage)
 const conversationStorageLayer = createBotbuilderStorageLayer<UserState>(conversationState)
 const wolfStorageLayer = createWolfStorageLayer(conversationState)
+
+const flow: wolf.Flow<UserState, StorageLayerType<UserState>> = {
+  abilities,
+  slots
+}
 
 // Listen for incoming requests
 server.post('/api/messages', (req, res) => {
@@ -47,12 +53,12 @@ server.post('/api/messages', (req, res) => {
       wolfStorageLayer(context),
       conversationStorageLayer(context, { alarms: [] }),
       () => nlp(context.activity.text),
-      () => abilities,
+      () => flow,
       'greeting'
     )
 
     // Respond Wolf messages
     const sendActivities = wolfResult.messageStringArray.map((message) => context.sendActivity(message))
     await Promise.all(sendActivities)
-  });
-});
+  })
+})

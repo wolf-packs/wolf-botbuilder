@@ -2,23 +2,29 @@
 // Licensed under the MIT License.
 
 import { TurnContext } from 'botbuilder'
+import { StorageLayerType } from '../../src'
 import * as wolf from 'wolf-core'
-import {} from '../../src'
-import abilities from './abilities'
+import { abilities } from './abilities'
+import { slots } from './slots'
 import nlp from './nlp'
 
 export interface ConversationData {
   name?: string
 }
 
+const flow: wolf.Flow<ConversationData, StorageLayerType<ConversationData>> = {
+  abilities,
+  slots
+}
+
 export class MyBot {
 
-  private wolfStorageLayer: wolf.StorageLayerFactory<TurnContext, wolf.WolfState>
-  private conversationStorageLayer: wolf.StorageLayerFactory<TurnContext, ConversationData>
+  private wolfStorageLayer: wolf.StorageLayerFactory<TurnContext, wolf.WolfState, StorageLayerType<wolf.WolfState>>
+  private conversationStorageLayer: wolf.StorageLayerFactory<TurnContext, ConversationData, StorageLayerType<ConversationData>>
 
   constructor(
-    wolfStorageLayer: wolf.StorageLayerFactory<TurnContext, wolf.WolfState>,
-    conversationStorageLayer: wolf.StorageLayerFactory<TurnContext, ConversationData>
+    wolfStorageLayer: wolf.StorageLayerFactory<TurnContext, wolf.WolfState, StorageLayerType<wolf.WolfState>>,
+    conversationStorageLayer: wolf.StorageLayerFactory<TurnContext, ConversationData, StorageLayerType<ConversationData>>
   ) {
     this.wolfStorageLayer = wolfStorageLayer
     this.conversationStorageLayer = conversationStorageLayer
@@ -37,7 +43,7 @@ export class MyBot {
       this.wolfStorageLayer(turnContext),
       this.conversationStorageLayer(turnContext, {}),
       () => nlp(turnContext),
-      () => abilities,
+      () => flow,
       'echo'
     )
 

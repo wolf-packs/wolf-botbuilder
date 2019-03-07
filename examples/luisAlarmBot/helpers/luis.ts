@@ -8,10 +8,10 @@ const transformLuisEntitiesToNlpEntities = (luisEntity): NlpEntity => {
   }
 }
 
-export const transformLuisToNlpResult = (luisResult): NlpResult => {
-  return {
+export const transformLuisToNlpResult = (luisResult): NlpResult[] => {
+  return [{
     message: luisResult.query,
     intent: luisResult.topScoringIntent.intent === 'None' ? null : luisResult.topScoringIntent.intent,
     entities: luisResult.entities.map(transformLuisEntitiesToNlpEntities),
-  }
+  }]
 }

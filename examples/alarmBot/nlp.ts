@@ -62,14 +62,14 @@ const recognizers: recognizer[] = [
   }
 ]
 
-function nlp(input: string): NlpResult {
+function nlp(input: string): NlpResult[] {
   const found = testers.find((tester) => tester.tester(input))
   if (!found) {
-    return {
+    return [{
       message: input,
       intent: null,
       entities: []
-    }
+    }]
   }
   const intent = found.name
 
@@ -77,11 +77,11 @@ function nlp(input: string): NlpResult {
     .map(rec => rec(input))
     .filter(_ => _) as NlpEntity[]
 
-  return {
+  return [{
     message: input,
     intent,
     entities
-  }
+  }]
 }
 
 export default nlp
