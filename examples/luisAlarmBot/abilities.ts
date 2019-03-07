@@ -77,7 +77,7 @@ export const abilities = [
   },
   {
     name: 'listAlarms',
-    slots: [],
+    traces: [],
     onComplete: async (submittedData, { read }) => {
       const convoState = await read()
       const alarms = convoState.alarms || []
