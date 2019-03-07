@@ -46,12 +46,9 @@ export const abilities = [
   },
   {
     name: 'removeAlarm',
-    slots: [
+    traces: [
       {
-        name: 'alarmName',
-        query: () => {
-          return 'What is the name of the alarm you would like to remove?'
-        }
+        slotName: 'alarmName'
       }
     ],
     onComplete: async (submittedData, { read, save }) => {
