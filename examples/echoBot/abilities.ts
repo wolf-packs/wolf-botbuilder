@@ -24,7 +24,6 @@ export const abilities =  [
     traces: [],
     onComplete: async (submittedData, {read}, {getMessageData}) => {
       const convoState = await read()
-      console.log(convoState)
       const messageData = getMessageData()
       const message = messageData.rawText
       if (convoState.name) {
